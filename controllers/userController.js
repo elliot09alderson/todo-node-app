@@ -3,8 +3,9 @@ import { userModel } from "../models/userModel.js"
 import jwt from "jsonwebtoken";
 import ErrorHandler from "../utils/ErrorHandler.js";
 import { sendCookie } from "../utils/sendCookie.js";
+import bcrypt from 'bcrypt'
 
-export const getAllUsers=async(req,res)=>{
+export const getAllUsers=async(req,res,next)=>{
     try {
         
         const user  = await userModel.find({});
@@ -17,7 +18,7 @@ export const getAllUsers=async(req,res)=>{
     }
 }
 
-export const registerUser=async(req,res)=>{
+export const registerUser=async(req,res,next)=>{
     try {
         
         const {name,email,password} = req.body
@@ -45,12 +46,12 @@ export const registerUser=async(req,res)=>{
     // ------------------------------XXX-----------------------------------------
     
     
-    export const loginUser=async(req,res)=>{
+    export const loginUser=async(req,res,next)=>{
 try {
     
     const {email,password} = req.body;
     const user = await userModel.findOne({email}).select("+password");
-    const isMatch = await bcrypt.compare(password,isFound.password)
+    const isMatch = await bcrypt.compare(password,user.password)
     if(!isMatch) return next(new ErrorHandler("Invalid user id or password",404))
     sendCookie(user,res,`Welcome back, ${user.name}`,200)
 } catch (error) {
@@ -59,14 +60,14 @@ try {
 }
 
 
-export const logoutUser=(req,res)=>{
+export const logoutUser=(req,res,next)=>{
 res.status(200).cookie("token","",{expires:new Date(Date.now()) ,sameSite:process.env.NODE_ENV=="Development" ? "lax":"none",secure:process.env.NODE_ENV=="Development"?false:true}).json({
     success:true,
     message:"user logged out successfully"
 })
 }
 
-export const deleteUser=async(req,res)=>{
+export const deleteUser=async(req,res,next)=>{
    
    try {
     
@@ -96,7 +97,7 @@ export const deleteUser=async(req,res)=>{
 //     })
 // }
 
-export const getMyProfile=(req,res)=>{
+export const getMyProfile=(req,res,next)=>{
     const {id} = req.params
 
     if(!user) return next(new ErrorHandler("user not found",404))

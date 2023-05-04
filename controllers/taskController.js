@@ -12,7 +12,7 @@ export const createTask=async(req,res)=>{
     })
 }
 
-export const getMyTask= async(req,res)=>{
+export const getMyTask= async(req,res,next)=>{
     const {_id} = req.user
     const task = await taskModel.find({user:_id});
     if(!task) return next(new ErrorHandler("task not found",404))
@@ -31,13 +31,13 @@ export const deleteTask = async(req,res,next)=>{
     await task.deleteOne()
      res.status(200).json({
         success:true,
-        message:"task updated"
+        message:"task deleted"
     })
 }
 
 
 
-export const editTask = async(req,res)=>{
+export const editTask = async(req,res,next)=>{
     try {
         
         const {id} = req.params
