@@ -26,7 +26,7 @@ app.use(cors({
 app.use('/api/v1/user',UserRouter)
 app.use('/api/v1/task',taskRouter)
 
-app.get('api/v1/test',(req,res)=>{
+app.get('/api/v1/test',(req,res)=>{
     console.log("working")
     res.json({
         message:"working"
