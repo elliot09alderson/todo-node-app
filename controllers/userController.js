@@ -38,7 +38,7 @@ export const registerUser=async(req,res,next)=>{
         
         res.cookie("token",encToken,{ httpOnly:true,maxAge:15*60*1000})
         // console.log(user.name)
-        res.send("user created successfully...")
+    res.status(200).json({success:"true",message:"User Created Successfully"})
     } catch (error) {
      next(error)   
     }
