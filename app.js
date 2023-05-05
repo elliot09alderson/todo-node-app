@@ -9,6 +9,11 @@ import { errorMiddleware } from './middleware/errorMiddleware.js'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 
+app.use(cors({
+    origin:[process.env.FRONTEND_URI],
+    methods:["GET","POST","PUT","DELETE"],
+    credentials:true
+}))
 config({
    path:"./env/config.env",
 });
@@ -17,11 +22,6 @@ app.use(urlencoded({extended:true}))
 // app.use(express.static(path.join(path.resolve(),"public")))
 app.use(cookieParser())
 app.use(express.json())
-app.use(cors({
-    origin:[process.env.FRONTEND_URI],
-    methods:["GET","POST","PUT","DELETE"],
-    credentials:true
-}))
 
 app.use('/api/v1/user',UserRouter)
 app.use('/api/v1/task',taskRouter)
